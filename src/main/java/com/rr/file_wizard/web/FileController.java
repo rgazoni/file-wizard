@@ -1,4 +1,5 @@
 package com.rr.file_wizard.web;
+import com.rr.file_wizard.exception.FileValidationException;
 import com.rr.file_wizard.service.FileMetadataService;
 import com.rr.file_wizard.service.S3Service;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,10 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new FileValidationException("File must not be null or empty");
+        }
         return ResponseEntity.ok(fileMetadataService.uploadFile(file));
     }
 
