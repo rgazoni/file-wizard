@@ -1,10 +1,12 @@
 package com.rr.file_wizard.service;
 
+import com.rr.file_wizard.exception.FileUploadException;
 import com.rr.file_wizard.exception.FileValidationException;
 import com.rr.file_wizard.model.FileMetadata;
 import com.rr.file_wizard.repository.FileMetadataRepository;
 import com.rr.file_wizard.util.ChecksumUtilImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -41,21 +43,18 @@ public class FileMetadataService {
         return fileMetadata;
     }
 
+    @Transactional(rollbackFor = IOException.class)
     public String uploadFile(MultipartFile file) {
 
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
 
-        //TODO: Transaction kind of style here in case of one of them fails
-        // ACIDify it.
-        FileMetadata fileMetadata = saveMetadata(file);
-
         try {
+            FileMetadata fileMetadata = saveMetadata(file);
             return s3Service.uploadFile(fileMetadata.getBucketFileName(), file);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file: " + file.getOriginalFilename(), e);
+            throw new FileUploadException("Failed to upload file. Please try again.");
         }
-
     }
 }
