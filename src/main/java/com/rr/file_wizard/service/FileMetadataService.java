@@ -43,18 +43,14 @@ public class FileMetadataService {
         return fileMetadata;
     }
 
-    @Transactional(rollbackFor = IOException.class)
-    public String uploadFile(MultipartFile file) {
+    @Transactional(rollbackFor = FileUploadException.class)
+    public String uploadFile(MultipartFile file) throws FileUploadException {
 
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
 
-        try {
-            FileMetadata fileMetadata = saveMetadata(file);
-            return s3Service.uploadFile(fileMetadata.getBucketFileName(), file);
-        } catch (IOException e) {
-            throw new FileUploadException("Failed to upload file. Please try again.");
-        }
+        FileMetadata fileMetadata = saveMetadata(file);
+        return s3Service.uploadFile(fileMetadata.getBucketFileName(), file);
     }
 }

@@ -1,4 +1,5 @@
 package com.rr.file_wizard.service;
+import com.rr.file_wizard.exception.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,13 +27,16 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(String fileName, MultipartFile file) throws IOException {
-
-        s3Client.putObject(PutObjectRequest.builder()
-                        .bucket(bucketName)
-                        .key(fileName)
-                        .build(),
-                RequestBody.fromBytes(file.getBytes()));
+    public String uploadFile(String fileName, MultipartFile file) {
+        try {
+            s3Client.putObject(PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(fileName)
+                            .build(),
+                    RequestBody.fromBytes(file.getBytes()));
+        } catch (IOException e) {
+            throw new FileUploadException("Failed to upload file. Please try again.");
+        }
 
         return "File uploaded: " + fileName;
     }
