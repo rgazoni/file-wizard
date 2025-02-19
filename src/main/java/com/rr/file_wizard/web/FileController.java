@@ -1,23 +1,19 @@
 package com.rr.file_wizard.web;
 import com.rr.file_wizard.exception.FileValidationException;
 import com.rr.file_wizard.service.FileMetadataService;
-import com.rr.file_wizard.service.S3Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1")
 public class FileController {
 
-    private final S3Service s3Service;
     private final FileMetadataService fileMetadataService;
 
-    public FileController(S3Service s3Service, FileMetadataService fileMetadataService) {
-        this.s3Service = s3Service;
+    public FileController(FileMetadataService fileMetadataService) {
         this.fileMetadataService = fileMetadataService;
     }
 
@@ -30,7 +26,9 @@ public class FileController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<String>> listFiles() {
-        return ResponseEntity.ok(s3Service.listFiles());
+    public ResponseEntity<Map<String, Object>> listFiles() {
+        return ResponseEntity.ok(
+               fileMetadataService.listFiles()
+        );
     }
 }

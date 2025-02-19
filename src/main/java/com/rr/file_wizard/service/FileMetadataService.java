@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class FileMetadataService {
@@ -59,12 +61,26 @@ public class FileMetadataService {
         return s3Service.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
     }
 
+    //TODO: update to a pagination approach
+    public Map<String, Object> listFiles() {
 
-    public void listFiles() {
-        // try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-        //     Future<ResultA> f1 = executor.submit(task1);
-        //     Future<ResultB> f2 = executor.submit(task2);
-            // ... use futures
-        // }
+        Iterable<FileMetadata> bucketFiles = fileMetadataRepository.findAll();
+
+        Map<String, Object> files = new HashMap<>();
+
+        bucketFiles.forEach(bucketFile -> {
+            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss");
+            String unformattedDate = bucketFile.getBucketFileName().split("\\.")[0];
+            LocalDateTime dateTime = LocalDateTime.parse(unformattedDate, myFormatObj);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+            files.put("updated_date", dateTime.format(outputFormatter));
+            files.put("file_name", bucketFile.getFileName());
+            files.put("content_type", bucketFile.getContentType());
+            files.put("file_extension", bucketFile.getFileExtension());
+            files.put("file_id", bucketFile.getBucketFileName());
+        });
+
+        return files;
     }
 }
