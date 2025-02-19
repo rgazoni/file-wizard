@@ -24,6 +24,19 @@ public class FileMetadata {
     @NotEmpty
     private String bucketFileName;
 
+    @NotEmpty
+    private String fileExtension;
+
+    public FileMetadata() {}
+
+    public String getFileExtension() {
+        return fileExtension;
+    }
+
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
+    }
+
     public String getBucketFileName() {
         return bucketFileName;
     }
@@ -48,9 +61,6 @@ public class FileMetadata {
     public void setChecksum(long checksum) {
         this.checksum = checksum;
     }
-
-
-    public FileMetadata() {}
 
     public Integer getId() {
         return id;

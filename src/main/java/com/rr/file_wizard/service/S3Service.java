@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,13 +28,14 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(String fileName, MultipartFile file) {
-        try {
+    public String uploadFile(String fileName, MultipartFile file, String fileExtension) {
+
+        try (InputStream inputStream = file.getInputStream()) {
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
-                            .key(fileName)
+                            .key(fileExtension + "/" + fileName)
                             .build(),
-                    RequestBody.fromBytes(file.getBytes()));
+                    RequestBody.fromInputStream(inputStream, file.getSize()));
         } catch (IOException e) {
             throw new FileUploadException("Failed to upload file. Please try again.");
         }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -38,6 +37,12 @@ public class FileMetadataService {
         fileMetadata.setChecksumAlgorithm(checksumUtil.getChecksumMethod());
         fileMetadata.setBucketFileName(formattedDate + "." + file.getOriginalFilename());
 
+        fileMetadata.setFileExtension("unknown");
+        int index = file.getOriginalFilename().lastIndexOf(".");
+        if (index != -1 && index < file.getOriginalFilename().length() - 1) {
+            fileMetadata.setFileExtension(file.getOriginalFilename().substring(index + 1));
+        }
+
         fileMetadataRepository.save(fileMetadata);
 
         return fileMetadata;
@@ -51,6 +56,15 @@ public class FileMetadataService {
         }
 
         FileMetadata fileMetadata = saveMetadata(file);
-        return s3Service.uploadFile(fileMetadata.getBucketFileName(), file);
+        return s3Service.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
+    }
+
+
+    public void listFiles() {
+        // try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+        //     Future<ResultA> f1 = executor.submit(task1);
+        //     Future<ResultB> f2 = executor.submit(task2);
+            // ... use futures
+        // }
     }
 }

@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS fileMetadata (
     content_type VARCHAR(255) NOT NULL,
     checksum BIGINT NOT NULL,
     checksum_algorithm VARCHAR(255) NOT NULL,
-    bucket_file_name VARCHAR(255) NOT NULL
+    bucket_file_name VARCHAR(255) NOT NULL,
+    file_extension  VARCHAR(10) NOT NULL
 );
