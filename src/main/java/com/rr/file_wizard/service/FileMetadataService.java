@@ -4,6 +4,7 @@ import com.rr.file_wizard.exception.FileUploadException;
 import com.rr.file_wizard.exception.FileValidationException;
 import com.rr.file_wizard.model.FileMetadata;
 import com.rr.file_wizard.repository.FileMetadataRepository;
+import com.rr.file_wizard.response.ApiResponse;
 import com.rr.file_wizard.util.ChecksumUtilImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,18 +52,20 @@ public class FileMetadataService {
     }
 
     @Transactional(rollbackFor = FileUploadException.class)
-    public String uploadFile(MultipartFile file) throws FileUploadException {
+    public ApiResponse<String> uploadFile(MultipartFile file) throws FileUploadException {
 
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
 
         FileMetadata fileMetadata = saveMetadata(file);
-        return s3Service.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
+        String result = s3Service.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
+
+        return ApiResponse.success(result);
     }
 
     //TODO: update to a pagination approach
-    public Map<String, Object> listFiles() {
+    public ApiResponse<Map<String, Object>> listFiles() {
 
         Iterable<FileMetadata> bucketFiles = fileMetadataRepository.findAll();
 
@@ -81,6 +84,6 @@ public class FileMetadataService {
             files.put("file_id", bucketFile.getBucketFileName());
         });
 
-        return files;
+        return ApiResponse.success(files);
     }
 }

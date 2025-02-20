@@ -1,5 +1,6 @@
 package com.rr.file_wizard.web;
 import com.rr.file_wizard.exception.FileValidationException;
+import com.rr.file_wizard.response.ApiResponse;
 import com.rr.file_wizard.service.FileMetadataService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ApiResponse<String>> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
@@ -26,7 +27,7 @@ public class FileController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Map<String, Object>> listFiles() {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> listFiles() {
         return ResponseEntity.ok(
                fileMetadataService.listFiles()
         );
