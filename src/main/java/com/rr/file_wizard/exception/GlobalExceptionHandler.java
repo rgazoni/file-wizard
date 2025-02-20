@@ -1,14 +1,10 @@
 package com.rr.file_wizard.exception;
 
 import com.rr.file_wizard.response.ApiResponse;
-import com.rr.file_wizard.response.ApiStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ApiResponse<String>> buildErrorResponse(String message, HttpStatus status) {
-        ApiResponse<String> err = new ApiResponse<>(ApiStatus.ERROR, status.getReasonPhrase(), message);
+        ApiResponse<String> err = ApiResponse.error(status.getReasonPhrase(), message);
         return new ResponseEntity<>(err, status);
     }
 }

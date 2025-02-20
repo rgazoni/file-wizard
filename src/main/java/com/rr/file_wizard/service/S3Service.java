@@ -31,7 +31,7 @@ public class S3Service {
     public String uploadFile(String fileName, MultipartFile file, String fileExtension) {
 
         try (InputStream inputStream = file.getInputStream()) {
-             s3Client.putObject(PutObjectRequest.builder()
+            s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
                             .key(fileExtension + "/" + fileName)
                             .build(),
