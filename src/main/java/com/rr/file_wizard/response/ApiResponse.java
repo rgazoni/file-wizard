@@ -18,8 +18,4 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> success(T data) {
        return new ApiResponse<>(ApiStatus.SUCCESS, data, null);
    }
-
-   public static <T> ApiResponse<T> error(String message) {
-       return new ApiResponse<>(ApiStatus.ERROR, null, message);
-   }
 }
