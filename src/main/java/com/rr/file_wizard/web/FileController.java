@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,9 +28,12 @@ public class FileController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> listFiles() {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> listFiles(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
         return ResponseEntity.ok(
-               fileMetadataService.listFiles()
+               fileMetadataService.listFiles(page, size)
         );
     }
 }

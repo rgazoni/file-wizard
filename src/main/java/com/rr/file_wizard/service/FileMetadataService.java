@@ -6,13 +6,19 @@ import com.rr.file_wizard.model.FileMetadata;
 import com.rr.file_wizard.repository.FileMetadataRepository;
 import com.rr.file_wizard.response.ApiResponse;
 import com.rr.file_wizard.util.ChecksumUtilImpl;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -64,26 +70,47 @@ public class FileMetadataService {
         return ApiResponse.success(result);
     }
 
-    //TODO: update to a pagination approach
-    public ApiResponse<Map<String, Object>> listFiles() {
+    public ApiResponse<Map<String, Object>> listFiles(int page, int size) {
 
-        Iterable<FileMetadata> bucketFiles = fileMetadataRepository.findAll();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<FileMetadata> bucketFiles = fileMetadataRepository.findAll(pageable);
 
-        Map<String, Object> files = new HashMap<>();
+        List<Map<String, Object>> files = new ArrayList<>();
 
-        bucketFiles.forEach(bucketFile -> {
-            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss");
-            String unformattedDate = bucketFile.getBucketFileName().split("\\.")[0];
-            LocalDateTime dateTime = LocalDateTime.parse(unformattedDate, myFormatObj);
-            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-            files.put("updated_date", dateTime.format(outputFormatter));
-            files.put("file_name", bucketFile.getFileName());
-            files.put("content_type", bucketFile.getContentType());
-            files.put("file_extension", bucketFile.getFileExtension());
-            files.put("file_id", bucketFile.getBucketFileName());
-        });
+        for (FileMetadata bucketFile : bucketFiles) {
+            Map<String, Object> info = new HashMap<>();
 
-        return ApiResponse.success(files);
+            String bucketFileName = bucketFile.getBucketFileName();
+            if (bucketFileName != null && bucketFileName.contains(".")) {
+                String unformattedDate = bucketFileName.split("\\.")[0];
+
+                try {
+                    LocalDateTime dateTime = LocalDateTime.parse(unformattedDate, inputFormatter);
+                    info.put("updated_date", dateTime.format(outputFormatter));
+                } catch (Exception e) {
+                    info.put("updated_date", "Invalid date format"); // Fallback value
+                }
+            } else {
+                info.put("updated_date", "Unknown");
+            }
+
+            info.put("file_name", bucketFile.getFileName());
+            info.put("content_type", bucketFile.getContentType());
+            info.put("file_extension", bucketFile.getFileExtension());
+            info.put("file_id", bucketFile.getBucketFileName());
+
+            files.add(info);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("files", files);
+        response.put("current_page", bucketFiles.getNumber());
+        response.put("total_items", bucketFiles.getTotalElements());
+        response.put("total_pages", bucketFiles.getTotalPages());
+
+        return ApiResponse.success(response);
     }
 }

@@ -1,30 +1,38 @@
 package com.rr.file_wizard.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.validation.constraints.NotNull;
 
-@Table("FILEMETADATA")
+@Entity(name = "filemetadata")
 public class FileMetadata {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotEmpty
+    @Column(name = "file_name")
     private String fileName;
 
     @NotEmpty
+    @Column(name = "content_type")
     private String contentType;
 
-    @NotEmpty
+    @NotNull
+    @Column(name = "checksum")
     private long checksum;
 
     @NotEmpty
+    @Column(name = "checksum_algorithm")
     private String checksumAlgorithm;
 
     @NotEmpty
+    @Column(name = "bucket_file_name")
     private String bucketFileName;
 
     @NotEmpty
+    @Column(name = "file_extension")
     private String fileExtension;
 
     public FileMetadata() {}
