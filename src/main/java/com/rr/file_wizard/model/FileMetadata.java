@@ -62,14 +62,6 @@ public class FileMetadata {
         this.checksum = checksum;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getFileName() {
         return fileName;
     }
@@ -85,4 +77,9 @@ public class FileMetadata {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 }
