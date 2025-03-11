@@ -1,4 +1,4 @@
-package com.rr.file_wizard.response;
+package com.rr.file_wizard.infrastructure.response;
 
 import java.time.Instant;
 

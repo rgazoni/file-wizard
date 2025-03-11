@@ -1,5 +1,5 @@
-package com.rr.file_wizard.service;
-import com.rr.file_wizard.exception.FileUploadException;
+package com.rr.file_wizard.application.service;
+import com.rr.file_wizard.infrastructure.exception.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

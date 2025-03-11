@@ -1,4 +1,4 @@
-package com.rr.file_wizard.util;
+package com.rr.file_wizard.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

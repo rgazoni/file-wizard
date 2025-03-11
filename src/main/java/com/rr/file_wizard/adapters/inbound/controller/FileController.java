@@ -1,12 +1,11 @@
-package com.rr.file_wizard.web;
-import com.rr.file_wizard.exception.FileValidationException;
-import com.rr.file_wizard.response.ApiResponse;
-import com.rr.file_wizard.service.FileMetadataService;
+package com.rr.file_wizard.adapters.inbound.controller;
+import com.rr.file_wizard.infrastructure.exception.FileValidationException;
+import com.rr.file_wizard.infrastructure.response.ApiResponse;
+import com.rr.file_wizard.application.service.FileMetadataService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

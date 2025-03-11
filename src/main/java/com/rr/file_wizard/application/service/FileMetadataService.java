@@ -1,11 +1,11 @@
-package com.rr.file_wizard.service;
+package com.rr.file_wizard.application.service;
 
-import com.rr.file_wizard.exception.FileUploadException;
-import com.rr.file_wizard.exception.FileValidationException;
-import com.rr.file_wizard.model.FileMetadata;
-import com.rr.file_wizard.repository.FileMetadataRepository;
-import com.rr.file_wizard.response.ApiResponse;
-import com.rr.file_wizard.util.ChecksumUtilImpl;
+import com.rr.file_wizard.infrastructure.exception.FileUploadException;
+import com.rr.file_wizard.infrastructure.exception.FileValidationException;
+import com.rr.file_wizard.domain.FileMetadata;
+import com.rr.file_wizard.adapters.outbound.repository.FileMetadataRepository;
+import com.rr.file_wizard.infrastructure.response.ApiResponse;
+import com.rr.file_wizard.utils.ChecksumUtilImpl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

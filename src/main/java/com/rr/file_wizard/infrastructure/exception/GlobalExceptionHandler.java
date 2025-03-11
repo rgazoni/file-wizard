@@ -1,6 +1,6 @@
-package com.rr.file_wizard.exception;
+package com.rr.file_wizard.infrastructure.exception;
 
-import com.rr.file_wizard.response.ApiResponse;
+import com.rr.file_wizard.infrastructure.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

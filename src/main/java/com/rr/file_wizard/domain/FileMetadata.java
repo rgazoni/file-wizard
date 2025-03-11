@@ -1,4 +1,4 @@
-package com.rr.file_wizard.model;
+package com.rr.file_wizard.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

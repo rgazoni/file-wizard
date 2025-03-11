@@ -1,4 +1,4 @@
-package com.rr.file_wizard.config;
+package com.rr.file_wizard.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
