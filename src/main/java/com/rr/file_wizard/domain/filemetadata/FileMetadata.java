@@ -1,7 +1,5 @@
 package com.rr.file_wizard.domain.filemetadata;
 
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
-
 public class FileMetadata {
 
     private Integer id;

@@ -6,7 +6,6 @@ import com.rr.file_wizard.domain.filemetadata.FileMetadataRepository;
 import com.rr.file_wizard.infrastructure.exception.FileUploadException;
 import com.rr.file_wizard.infrastructure.exception.FileValidationException;
 import com.rr.file_wizard.domain.filemetadata.FileMetadata;
-import com.rr.file_wizard.infrastructure.response.ApiResponse;
 import com.rr.file_wizard.utils.checksum.ChecksumUtilImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -54,19 +53,18 @@ public class FileMetadataServiceImpl implements FileMetadataUseCases {
     }
 
     @Transactional(rollbackFor = FileUploadException.class)
-    public ApiResponse<String> uploadFile(MultipartFile file) throws FileUploadException {
+    public String uploadFile(MultipartFile file) throws FileUploadException {
 
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
 
         FileMetadata fileMetadata = saveMetadata(file);
-        String result = fileUploaderPort.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
 
-        return ApiResponse.success(result);
+        return fileUploaderPort.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
     }
 
-    public ApiResponse<Map<String, Object>> listFiles(int page, int size) {
+    public Map<String, Object> listFiles(int page, int size) {
 
         List<FileMetadata> bucketFiles = fileMetadataRepository.findAll(page, size);
 
@@ -106,6 +104,6 @@ public class FileMetadataServiceImpl implements FileMetadataUseCases {
         // response.put("total_items", bucketFiles.getTotalElements());
         // response.put("total_pages", bucketFiles.getTotalPages());
 
-        return ApiResponse.success(response);
+        return response;
     }
 }

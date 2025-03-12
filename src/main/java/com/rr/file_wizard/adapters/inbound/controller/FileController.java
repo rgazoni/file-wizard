@@ -24,7 +24,7 @@ public class FileController {
         if (file == null || file.isEmpty()) {
             throw new FileValidationException("File must not be null or empty");
         }
-        return ResponseEntity.ok(fileMetadataService.uploadFile(file));
+        return ResponseEntity.ok(ApiResponse.success(fileMetadataService.uploadFile(file)));
     }
 
     @GetMapping("/list")
@@ -32,8 +32,9 @@ public class FileController {
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
+
         return ResponseEntity.ok(
-               fileMetadataService.listFiles(page, size)
+               ApiResponse.success(fileMetadataService.listFiles(page, size))
         );
     }
 }
