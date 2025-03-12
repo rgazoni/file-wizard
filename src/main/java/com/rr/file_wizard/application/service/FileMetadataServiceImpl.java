@@ -1,18 +1,17 @@
 package com.rr.file_wizard.application.service;
 
+import com.rr.file_wizard.application.usecases.FileMetadataUseCases;
+import com.rr.file_wizard.domain.filemetadata.FileMetadataRepository;
 import com.rr.file_wizard.infrastructure.exception.FileUploadException;
 import com.rr.file_wizard.infrastructure.exception.FileValidationException;
-import com.rr.file_wizard.domain.FileMetadata;
-import com.rr.file_wizard.adapters.outbound.repository.FileMetadataRepository;
+import com.rr.file_wizard.domain.filemetadata.FileMetadata;
 import com.rr.file_wizard.infrastructure.response.ApiResponse;
 import com.rr.file_wizard.utils.ChecksumUtilImpl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,15 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FileMetadataService {
+@RequiredArgsConstructor
+public class FileMetadataServiceImpl implements FileMetadataUseCases {
 
-    private final S3Service s3Service;
     private final FileMetadataRepository fileMetadataRepository;
-
-    public FileMetadataService(S3Service s3Service, FileMetadataRepository fileMetadataRepository) {
-        this.s3Service = s3Service;
-        this.fileMetadataRepository = fileMetadataRepository;
-    }
+    private final S3Service s3Service;
 
     public FileMetadata saveMetadata(MultipartFile file) {
         LocalDateTime myDateObj = LocalDateTime.now();
@@ -72,8 +67,7 @@ public class FileMetadataService {
 
     public ApiResponse<Map<String, Object>> listFiles(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<FileMetadata> bucketFiles = fileMetadataRepository.findAll(pageable);
+        List<FileMetadata> bucketFiles = fileMetadataRepository.findAll(page, size);
 
         List<Map<String, Object>> files = new ArrayList<>();
 
@@ -107,9 +101,9 @@ public class FileMetadataService {
 
         Map<String, Object> response = new HashMap<>();
         response.put("files", files);
-        response.put("current_page", bucketFiles.getNumber());
-        response.put("total_items", bucketFiles.getTotalElements());
-        response.put("total_pages", bucketFiles.getTotalPages());
+        // response.put("current_page", bucketFiles.getNumber());
+        // response.put("total_items", bucketFiles.getTotalElements());
+        // response.put("total_pages", bucketFiles.getTotalPages());
 
         return ApiResponse.success(response);
     }

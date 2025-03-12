@@ -1,7 +1,7 @@
 package com.rr.file_wizard.adapters.inbound.controller;
 import com.rr.file_wizard.infrastructure.exception.FileValidationException;
 import com.rr.file_wizard.infrastructure.response.ApiResponse;
-import com.rr.file_wizard.application.service.FileMetadataService;
+import com.rr.file_wizard.application.service.FileMetadataServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,9 +12,9 @@ import java.util.Map;
 @RequestMapping("/v1")
 public class FileController {
 
-    private final FileMetadataService fileMetadataService;
+    private final FileMetadataServiceImpl fileMetadataService;
 
-    public FileController(FileMetadataService fileMetadataService) {
+    public FileController(FileMetadataServiceImpl fileMetadataService) {
         this.fileMetadataService = fileMetadataService;
     }
 
