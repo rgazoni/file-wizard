@@ -2,8 +2,6 @@ package com.rr.file_wizard.adapters.outbound.entities;
 
 import com.rr.file_wizard.domain.filemetadata.FileMetadata;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,28 +17,22 @@ public class JpaFileMetadataEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty
-    @Column(name = "file_name")
+    @Column(name = "file_name", nullable = false)
     private String fileName;
 
-    @NotEmpty
-    @Column(name = "content_type")
+    @Column(name = "content_type", nullable = false)
     private String contentType;
 
-    @NotNull
-    @Column(name = "checksum")
+    @Column(name = "checksum", nullable = false)
     private long checksum;
 
-    @NotEmpty
-    @Column(name = "checksum_algorithm")
+    @Column(name = "checksum_algorithm", nullable = false)
     private String checksumAlgorithm;
 
-    @NotEmpty
-    @Column(name = "bucket_file_name")
+    @Column(name = "bucket_file_name", nullable = false)
     private String bucketFileName;
 
-    @NotEmpty
-    @Column(name = "file_extension")
+    @Column(name = "file_extension", nullable = false)
     private String fileExtension;
 
     public JpaFileMetadataEntity(FileMetadata fileMetadata) {
