@@ -1,4 +1,5 @@
 package com.rr.file_wizard.adapters.inbound.controller;
+import com.rr.file_wizard.application.usecases.FileMetadataUseCases;
 import com.rr.file_wizard.infrastructure.exception.FileValidationException;
 import com.rr.file_wizard.infrastructure.response.ApiResponse;
 import com.rr.file_wizard.application.service.FileMetadataServiceImpl;
@@ -12,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/v1")
 public class FileController {
 
-    private final FileMetadataServiceImpl fileMetadataService;
+    private final FileMetadataUseCases fileMetadataService;
 
     public FileController(FileMetadataServiceImpl fileMetadataService) {
         this.fileMetadataService = fileMetadataService;

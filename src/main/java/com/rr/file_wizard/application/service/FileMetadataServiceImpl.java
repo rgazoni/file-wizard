@@ -7,7 +7,7 @@ import com.rr.file_wizard.infrastructure.exception.FileUploadException;
 import com.rr.file_wizard.infrastructure.exception.FileValidationException;
 import com.rr.file_wizard.domain.filemetadata.FileMetadata;
 import com.rr.file_wizard.infrastructure.response.ApiResponse;
-import com.rr.file_wizard.utils.ChecksumUtilImpl;
+import com.rr.file_wizard.utils.checksum.ChecksumUtilImpl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.rr.file_wizard.utils;
+package com.rr.file_wizard.utils.checksum;
 
 import org.springframework.web.multipart.MultipartFile;
 
