@@ -1,5 +1,6 @@
 package com.rr.file_wizard.application.service;
 
+import com.rr.file_wizard.adapters.outbound.storage.FileUploaderPort;
 import com.rr.file_wizard.application.usecases.FileMetadataUseCases;
 import com.rr.file_wizard.domain.filemetadata.FileMetadataRepository;
 import com.rr.file_wizard.infrastructure.exception.FileUploadException;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class FileMetadataServiceImpl implements FileMetadataUseCases {
 
     private final FileMetadataRepository fileMetadataRepository;
-    private final S3Service s3Service;
+    private final FileUploaderPort fileUploaderPort;
 
     public FileMetadata saveMetadata(MultipartFile file) {
         LocalDateTime myDateObj = LocalDateTime.now();
@@ -60,7 +61,7 @@ public class FileMetadataServiceImpl implements FileMetadataUseCases {
         }
 
         FileMetadata fileMetadata = saveMetadata(file);
-        String result = s3Service.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
+        String result = fileUploaderPort.uploadFile(fileMetadata.getBucketFileName(), file, fileMetadata.getFileExtension());
 
         return ApiResponse.success(result);
     }

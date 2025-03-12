@@ -1,32 +1,25 @@
-package com.rr.file_wizard.application.service;
+package com.rr.file_wizard.adapters.outbound.storage;
+
 import com.rr.file_wizard.infrastructure.exception.FileUploadException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class S3Service {
+@Component
+@RequiredArgsConstructor
+public class FileUploaderAdapter implements FileUploaderPort {
 
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
-
-    public S3Service(S3Client s3Client) {
-        this.s3Client = s3Client;
-    }
 
     public String uploadFile(String fileName, MultipartFile file, String fileExtension) {
 
@@ -42,22 +35,5 @@ public class S3Service {
 
         return "File uploaded: " + fileName;
     }
-
-    public byte[] downloadFile(String key) throws IOException {
-        var objectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
-
-        var response = s3Client.getObject(objectRequest);
-        return Files.readAllBytes(Paths.get(response.response().toString()));
-    }
-
-    public List<String> listFiles() {
-        return s3Client.listObjectsV2(req -> req.bucket(bucketName))
-                .contents()
-                .stream()
-                .map(S3Object::key)
-                .collect(Collectors.toList());
-    }
 }
+
